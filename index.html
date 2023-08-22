@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html ng-app="extensionCalculatorApp">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Extension Calculator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-animate.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/angular/12.2.17/core.umd.min.js"></script> -->
+</head>
+
+<body ng-controller="CalculatorController as vm" style="font-family: 'Poppins', sans-serif;">
+
+  <div ng-app="extensionCalculatorApp" ng-controller="CalculatorController as vm"
+    style="font-family: 'Poppins', sans-serif; display: flex; flex-direction: column;">
+    <div style="display: flex; justify-content: center; width: 100%;">
+      <div class="container">
+        <div class="top-wrap">
+          <div class="text">
+            <h1 style="font-size: 40px;">
+              How Much Does A Kitchen Extension Costs?
+            </h1>
+            <p>
+              This question is often at the forefront for many of our clients. In response, we've developed a sleek and
+              user-friendly extension cost estimator. Given the fluctuations in extension costs, particularly in London,
+              our tool aims to offer transparency and clarity.
+
+            </p>
+            <p>
+              Easily discover the extension possibilities tailored for you and understand the factors shaping your final
+              estimate. Plus, for a tangible touch, we feature 3D visualizations to project the potential transformation
+              of your space, making your home renovation dream tangible."
+            </p>
+
+            <div class="scroll-down" ng-click="vm.showAll()">
+              <p> <i style="margin-right: 10px;" class="fas fa-long-arrow-alt-down"></i>Scroll Down to View All</p>
+            </div>
+          </div>
+          <div class="main">
+            <!-- Step 1: House Types -->
+            <div class="back-box"></div>
+            <div class="box" ng-if="vm.currentStep === 1">
+              <div class="description">
+                <h2>Select House Type:</h2>
+                <p>Select from below option</p>
+              </div>
+              <div class="items-wrapper">
+                <div class="item" ng-class="{ 'selected': house.selected }" ng-repeat="house in vm.houseTypes"
+                  ng-click="vm.selectHouseType(house)">
+                  <div class="item-img">
+                    <img ng-src="{{ house.imageUrl }}" />
+                  </div>
+                  <label>
+                    {{house.name}}
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2: Extension Types -->
+            <div class="box" ng-if="vm.currentStep === 2">
+              <div class="description">
+                <h2>Select Extension Type:</h2>
+                <p>Select from below option</p>
+              </div>
+              <div class="items-wrapper">
+                <div class="item" ng-class="{ 'selected': extension.selected }"
+                  ng-repeat="extension in vm.extensionTypes" ng-click="vm.selectExtensionType(extension)">
+                  <div class="item-img">
+                    <img ng-src="{{ extension.imageUrl }}" />
+                  </div>
+                  <label>
+                    {{extension.name}}
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3: Roof Types -->
+            <div class="box" ng-if="vm.currentStep === 3">
+              <div class="description">
+                <h2>Select Roof Type:</h2>
+                <p>Select from below option</p>
+              </div>
+              <div class="items-wrapper">
+                <div class="item" ng-class="{ 'selected': roof.selected }" ng-repeat="roof in vm.roofTypes"
+                  ng-click="vm.selectRoofType(roof)">
+                  <div class="item-img">
+                    <img ng-src="{{ roof.imageUrl }}" />
+                  </div>
+                  <label>
+                    {{roof.name}}
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 4: Results -->
+            <div class="box" ng-if="vm.currentStep === 4">
+              <div class="description">
+                <h3>Your Selection:</h3>
+              </div>
+              <div ng-if="vm.filteredSelections.length" style="display: flex; gap: 30px">
+                <div class="final-item" ng-repeat="item in vm.filteredSelections">
+                  <div class="item-img">
+                    <img ng-src="{{ item.imageUrl }}" alt="item.description" />
+                  </div>
+                  <hr class="separator">
+                  <div class="item-desc">
+                    <h4 style="font-size: 19px; font-weight: 600; color: #5C5C5B; text-transform: uppercase;">
+                      {{item.name}} </h4>
+                    <p style="opacity: 0.3; color:#454543; font-size: 18px;"> {{item.description}} </p>
+                    <h4>Estimated Cost</h4>
+                    <p class="price">£{{item.price}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="buttons-wrapper">
+              <p ng-style="{ 'visibility': vm.currentStep === 1 ? 'hidden' : 'visible' }" ng-click="vm.goBack()">Back
+              </p>
+              <button ng-if="vm.currentStep === 1" ng-disabled="!vm.selections.house"
+                ng-click="vm.moveToNextStep()">Next Step
+                <i style="margin-left: 10px;" class="fas fa-arrow-right"></i></button>
+              <button ng-if="vm.currentStep === 2" ng-disabled="!vm.selections.extensions.length"
+                ng-click="vm.moveToNextStep()">Next Step
+                <i style="margin-left: 10px;" class="fas fa-arrow-right"></i></button>
+              <button ng-if="vm.currentStep === 3" ng-click="vm.findCostAndShowSelections()">Find Cost <i
+                  style="margin-left: 10px;" class="fas fa-long-arrow-alt-down"></i></button>
+            </div>
+            <!-- Progress Bar -->
+            <div class="progress-container">
+              <div class="bar-step"
+                ng-class="{ 'completed': vm.progressWidth === '33%' || vm.progressWidth === '66%' || vm.progressWidth === '100%' }"
+                ng-click="vm.goToStep(1)">1</div>
+              <div class="bar-step"
+                ng-class="{ 'completed': vm.progressWidth === '66%' || vm.progressWidth === '100%' }"
+                ng-click="vm.goToStep(2)">2</div>
+              <div class="bar-step" ng-class="{ 'completed': vm.progressWidth === '100%' }" ng-click="vm.goToStep(3)">3
+              </div>
+              <div class="progress-bar" ng-style="{ 'width': vm.progressWidth }"></div>
+              <div class="progress-bar" style="background-color: #e3e3e3; width: 100%; z-index: -3;"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- New Section for Selections -->
+    <section class="all-final" ng-class="{'layout-shift': vm.selections.house}">
+      <div class="container" id="selections" ng-if="vm.selections.house" style="padding: 2rem;">
+        <!-- New Section for All Final Selections -->
+        <div class="costs-section">
+          <h3><span>Your Example Costs:</span></h3>
+          <hr class="seperator">
+          <div class="costs-info">
+            <svg width="90px" height="90px" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg"
+              xmlns:xlink="http://www.w3.org/1999/xlink">
+              <title>bulb</title>
+              <g id="Page-1" stroke="none" stroke-width="1" fill-rule="evenodd">
+                <g id="Combined-Shape" transform="translate(42.666667, 21.333333)">
+                  <path
+                    d="M213.333333,85.3333333 C284.025781,85.3333333 341.333333,142.640885 341.333333,213.333333 C341.333333,260.711239 315.5928,302.077122 277.333732,324.208982 L277.333333,405.333333 L256,426.666667 L234.666667,426.666667 C234.666667,438.448741 225.115408,448 213.333333,448 C201.551259,448 192,438.448741 192,426.666667 L192,426.666667 L170.666667,426.666667 L149.333333,405.333333 L149.332954,324.208993 C111.073876,302.077136 85.3333333,260.711248 85.3333333,213.333333 C85.3333333,142.640885 142.640885,85.3333333 213.333333,85.3333333 Z M234.667665,339.563386 C227.72957,340.727434 220.602209,341.333333 213.333333,341.333333 C206.064458,341.333333 198.937097,340.727434 191.999002,339.563386 L192,384 L234.666667,384 L234.667665,339.563386 Z M96.4250122,307.614237 L119.052429,330.241654 L73.7975952,375.496488 L51.1701782,352.869071 L96.4250122,307.614237 Z M330.241654,307.614237 L375.496488,352.869071 L352.869071,375.496488 L307.614237,330.241654 L330.241654,307.614237 Z M213.333333,128 C166.205035,128 128,166.205035 128,213.333333 C128,260.461632 166.205035,298.666667 213.333333,298.666667 C260.461632,298.666667 298.666667,260.461632 298.666667,213.333333 C298.666667,166.205035 260.461632,128 213.333333,128 Z M426.666667,197.333333 L426.666667,229.333333 L362.666667,229.333333 L362.666667,197.333333 L426.666667,197.333333 Z M64,197.333333 L64,229.333333 L3.55271368e-14,229.333333 L3.55271368e-14,197.333333 L64,197.333333 Z M352.869071,51.1701782 L375.496488,73.7975952 L330.241654,119.052429 L307.614237,96.4250122 L352.869071,51.1701782 Z M73.7975952,51.1701782 L119.052429,96.4250122 L96.4250122,119.052429 L51.1701782,73.7975952 L73.7975952,51.1701782 Z M229.333333,-1.0658141e-14 L229.333333,64 L197.333333,64 L197.333333,-1.0658141e-14 L229.333333,-1.0658141e-14 Z">
+                  </path>
+                </g>
+              </g>
+            </svg>
+            <p>All estimated costs for house extensions include building work, plumbing, electricity, glazing, external
+              doors and applicable VAT</p>
+          </div>
+        </div>
+        <!-- //loader -->
+        <div ng-if="vm.isLoading" class="loader">
+          <div class="snippet" data-title="dot-pulse">
+            <div class="stage">
+              <div class="dot-pulse"></div>
+            </div>
+          </div>
+        </div>
+        <div class="test" ng-class="{ 'loaded': !vm.isLoading }">
+
+          <div ng-if="vm.filteredSelections.length  && !vm.isLoading"
+            style="display: flex; gap: 30px; flex-wrap: wrap; justify-content: center;">
+            <div class="final-item" ng-repeat="item in vm.filteredSelections">
+              <div class="item-img">
+                <img ng-src="{{ item.imageUrl }}" alt="{{item.description}}" />
+              </div>
+              <hr class="separator">
+              <div class="item-desc">
+                <h4 style="font-size: 19px; font-weight: 600; color: #5C5C5B; text-transform: uppercase;"> {{item.name}}
+                </h4>
+                <p style="opacity: 0.3; color:#454543; font-size: 18px;"> {{item.description}} </p>
+                <h4>Estimated Cost</h4>
+                <p class="price">£{{item.price}}</p>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: center;" ng-if="vm.filteredSelections.length === 0">
+            <h4>Sorry, we have no example cost matching your criteria.<br> Get in Touch to discuss your options further.
+            </h4>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="all" class="all-final">
+      <!-- New Section for All Final Selections -->
+      <div class="container">
+        <div class="description">
+          <div class="costs-section">
+            <h3><span>All Example Costs:</span></h3>
+            <hr class="seperator">
+            <div class="costs-info">
+              <!-- <i class="fal fa-lightbulb-on"></i> -->
+              <svg width="90px" height="90px" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
+                <title>bulb</title>
+                <g id="Page-1" stroke="none" stroke-width="1" fill-rule="evenodd">
+                  <g id="Combined-Shape" transform="translate(42.666667, 21.333333)">
+                    <path
+                      d="M213.333333,85.3333333 C284.025781,85.3333333 341.333333,142.640885 341.333333,213.333333 C341.333333,260.711239 315.5928,302.077122 277.333732,324.208982 L277.333333,405.333333 L256,426.666667 L234.666667,426.666667 C234.666667,438.448741 225.115408,448 213.333333,448 C201.551259,448 192,438.448741 192,426.666667 L192,426.666667 L170.666667,426.666667 L149.333333,405.333333 L149.332954,324.208993 C111.073876,302.077136 85.3333333,260.711248 85.3333333,213.333333 C85.3333333,142.640885 142.640885,85.3333333 213.333333,85.3333333 Z M234.667665,339.563386 C227.72957,340.727434 220.602209,341.333333 213.333333,341.333333 C206.064458,341.333333 198.937097,340.727434 191.999002,339.563386 L192,384 L234.666667,384 L234.667665,339.563386 Z M96.4250122,307.614237 L119.052429,330.241654 L73.7975952,375.496488 L51.1701782,352.869071 L96.4250122,307.614237 Z M330.241654,307.614237 L375.496488,352.869071 L352.869071,375.496488 L307.614237,330.241654 L330.241654,307.614237 Z M213.333333,128 C166.205035,128 128,166.205035 128,213.333333 C128,260.461632 166.205035,298.666667 213.333333,298.666667 C260.461632,298.666667 298.666667,260.461632 298.666667,213.333333 C298.666667,166.205035 260.461632,128 213.333333,128 Z M426.666667,197.333333 L426.666667,229.333333 L362.666667,229.333333 L362.666667,197.333333 L426.666667,197.333333 Z M64,197.333333 L64,229.333333 L3.55271368e-14,229.333333 L3.55271368e-14,197.333333 L64,197.333333 Z M352.869071,51.1701782 L375.496488,73.7975952 L330.241654,119.052429 L307.614237,96.4250122 L352.869071,51.1701782 Z M73.7975952,51.1701782 L119.052429,96.4250122 L96.4250122,119.052429 L51.1701782,73.7975952 L73.7975952,51.1701782 Z M229.333333,-1.0658141e-14 L229.333333,64 L197.333333,64 L197.333333,-1.0658141e-14 L229.333333,-1.0658141e-14 Z">
+                    </path>
+                  </g>
+                </g>
+              </svg>
+              <p>All estimated costs for house extensions include building work, plumbing, electricity, glazing,
+                external
+                doors and applicable VAT</p>
+            </div>
+          </div>
+        </div>
+        <div class="">
+          <div style="display: flex; gap: 30px; flex-wrap: wrap; justify-content: center;">
+            <div ng-click="vm.consoleItem(item)" class="final-item" ng-repeat="item in vm.finalSelections">
+              <!-- Similar structure as filteredSelections -->
+              <div class="item-img">
+                <img ng-src="{{ item.imageUrl }}" alt="{{item.description}}" />
+              </div>
+              <hr class="separator">
+              <div class="item-desc">
+                <h4 style="font-size: 19px; font-weight: 600; color: #5C5C5B; text-transform: uppercase;"> {{item.name}}
+                </h4>
+                <p style="opacity: 0.3; color:#454543; font-size: 18px;"> {{item.description}} </p>
+                <h4>Estimated Cost</h4>
+                <p class="price">£{{item.price}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="calculator.js"></script>
+</body>
+
+</html>
