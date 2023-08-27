@@ -205,6 +205,7 @@ body {
   /* max-width: 790px; */
   max-width: 500px;
   padding: 0;
+  position: relative;
   background-color: white;
 }
 
@@ -594,7 +595,7 @@ label:hover {
 @media only screen and (max-width: 991px) {
   .top-wrap {
     flex-direction: column;
-    gap: 90px;
+    gap: px;
   }
   .top-wrap .main .back-box {
     display: none;
