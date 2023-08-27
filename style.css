@@ -1,3 +1,7 @@
+html,
+body {
+  overflow-x: hidden;
+}
 body {
   margin: 0;
   font-family: "Arial", sans-serif;
@@ -13,14 +17,14 @@ body {
 
 #selections.ng-enter {
   opacity: 0;
-  transform: translateY(100%); 
+  transform: translateY(100%);
   transition: all 0.4s ease-in;
 }
 
 /* Ending state (enter) */
 #selections.ng-enter-active {
   opacity: 1;
-  transform: translateY(0); 
+  transform: translateY(0);
 }
 
 .all-final {
@@ -140,7 +144,6 @@ body {
   }
 }
 
-
 .container {
   /* margin: 0 auto; */
   padding: 35px;
@@ -163,11 +166,11 @@ body {
   /* border: 1px solid rgba(75, 75, 75, 0.2);  */
   cursor: pointer;
   position: relative;
-  transition: transform  0.3s;
+  transition: transform 0.3s;
 }
 
 .scroll-down i {
-  transition: transform  0.3s;
+  transition: transform 0.3s;
 }
 
 .scroll-down p {
@@ -175,7 +178,7 @@ body {
   align-items: center;
   margin: 0;
   letter-spacing: 1.8px;
-  transition: transform  0.3s;
+  transition: transform 0.3s;
 }
 
 .scroll-down:hover i {
@@ -241,7 +244,6 @@ body {
   font-size: 14px;
 }
 
-
 .progress-container {
   position: relative;
   height: 40px;
@@ -267,7 +269,7 @@ body {
   align-items: center;
   padding: 10px 0 10px 0;
   cursor: pointer;
-  transition: transform  0.3s;
+  transition: transform 0.3s;
   background-color: #ebebeb79;
 }
 
@@ -313,7 +315,6 @@ label {
 label:hover {
   color: #4caf50;
 }
-
 
 /* BUttons */
 .buttons-wrapper {
@@ -414,11 +415,7 @@ label:hover {
   gap: 30px;
 }
 
-
-
-
 @media (max-width: 768px) {
-
   .box h2,
   .box h3 {
     font-size: 20px;
@@ -435,7 +432,6 @@ label:hover {
   margin: 10px;
   background-color: #f9f9f9;
 }
-
 
 @media (max-width: 768px) {
   .item {
@@ -457,7 +453,6 @@ label:hover {
   min-width: 18rem;
   background-color: #ffffff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
 }
 
 .final-item:hover {
@@ -506,7 +501,6 @@ label:hover {
   /* Adjust spacing as needed */
 }
 
-
 /* //Media quereies */
 @media only screen and (max-width: 992px) {
   .top-wrap {
@@ -536,7 +530,6 @@ label:hover {
     margin-left: 5rem;
     width: 80%;
   }
-
 
   .costs-section {
     flex-direction: column;
@@ -571,8 +564,6 @@ label:hover {
 } */
 }
 
-
-
 /* More styles ... */
 
 /* Responsive styles organized from smallest to largest viewport */
@@ -603,7 +594,10 @@ label:hover {
 @media only screen and (max-width: 991px) {
   .top-wrap {
     flex-direction: column;
-    gap: 135px;
+    gap: 90px;
+  }
+  .top-wrap .main .back-box {
+    display: none;
   }
 
   .all-final {
@@ -617,7 +611,6 @@ label:hover {
   .scroll-down {
     top: 2rem;
   }
-
 
   .costs-section {
     margin-bottom: 40px !important;
@@ -650,7 +643,6 @@ label:hover {
   /* #selections {
     margin-top: 25px;
   } */
-
 }
 
 @media only screen and (max-width: 430px) {
@@ -665,8 +657,6 @@ label:hover {
   margin: 10px;
   background-color: #f9f9f9;
 }
-
-
 
 /* SELECTIONS */
 
@@ -719,7 +709,6 @@ label:hover {
 } */
 
 @keyframes flash {
-
   0%,
   100% {
     fill: #53c553;
@@ -744,15 +733,12 @@ label:hover {
   }
 }
 
-
 @media only screen and (max-width: 767px) {
   .costs-info {
     font-size: 12px;
     line-height: 22px;
   }
 }
-
-
 
 .final-item {
   display: flex;
